@@ -2,86 +2,148 @@
 
 // college half-court is 50 x 47
 // scale the height based on specified width
-WIDTH = 600
+WIDTH = 400
 HEIGHT = .94 * WIDTH
 FEET = WIDTH/50
 INCHES = FEET/12
 CENTER_COURT = WIDTH/2
-CIRCLE_BORDER = 3
 
-console.log("1inch: " + INCHES + " pixels.");
-console.log("1 foot: "+ FEET + " pixels.");
+//******************** Helper functions to build court **********************//
 
-var courtDiv = d3.select(".shotchart");
-var courtSVG = courtDiv.append("svg")
-						.attr("width", WIDTH)
-						.attr("height", HEIGHT)
-						.style("border", "3px solid black");
+// Draws half circle centeblack at top of chart with specified radius
+function draw_hc_arc(court, r_feet) {
+	radius = r_feet * FEET
+	var hc_arc = d3.arc()
+		.innerRadius(radius)
+		.outerRadius(radius)
+		.startAngle(0)
+		.endAngle(Math.PI);
 
-// Large Halfcourt Arc
-var lg_hc_arc = d3.arc()
-	.innerRadius(6*FEET)
-    .outerRadius(6*FEET + CIRCLE_BORDER)
-    .startAngle(0)
-    .endAngle(2 * Math.PI);
+		court.append("path")
+		.attr("d", hc_arc)
+		.attr("transform", "translate(" + CENTER_COURT + ", 0) rotate(90)")
+		.style("stroke", "black");
+}
 
-// Small Halfcourt Arc
-var sm_hc_arc = d3.arc()
-	.innerRadius(2*FEET)
-    .outerRadius(2*FEET + CIRCLE_BORDER)
-    .startAngle(0)
-    .endAngle(2 * Math.PI);
+function draw_key(court, key_width_feet, key_height_feet, charge_circle=true) {
+	start_point = [(WIDTH/2) - ((key_width_feet/2)*FEET), HEIGHT];
+	arc_start = [(WIDTH/2) - ((key_width_feet/2)*FEET), (HEIGHT - (key_height_feet*FEET))];
+	end_point = [(WIDTH/2) + ((key_width_feet/2)*FEET), HEIGHT];
+	key_arc_center = [WIDTH/2, (HEIGHT - (key_height_feet*FEET))];
+	arc_radius = (key_width_feet/2) * FEET;
 
-// Add Large Half-Court circle to SVG
-courtSVG.append("path")
-		.attr("d", lg_hc_arc)
-		.attr("transform", "translate(" + CENTER_COURT + ", 0)");
+	// Draw outline of key
+	var path = d3.path();
+	path.moveTo(start_point[0], start_point[1]);
+	path.lineTo(arc_start[0], arc_start[1]);
+	path.arc(key_arc_center[0], key_arc_center[1], arc_radius, Math.PI, 0);
+	path.lineTo(end_point[0], end_point[1]);
 
-courtSVG.append("path")
-		.attr("d", sm_hc_arc)
-		.attr("transform", "translate(" + CENTER_COURT + ", 0)");
-
-courtSVG.append("line")
-		.style("stroke", "black")
+	court.append("path")
+		.attr("d", path)
 		.style("stroke-width", "3px")
-		.attr("x1", .38*WIDTH)
-		.attr("y1", HEIGHT)
-		.attr("x2", .38*WIDTH)
-		.attr("y2", HEIGHT - (.404*HEIGHT)); 
-
-courtSVG.append("line")
 		.style("stroke", "black")
-		.style("stroke-width", "3px")
-		.attr("x1", .62*WIDTH)
-		.attr("y1", HEIGHT)
-		.attr("x2", .62*WIDTH)
-		.attr("y2", HEIGHT - (.404*HEIGHT)); 
+		.style("fill", "none");
 
-courtSVG.append("line")
+	// draft free throw line
+	court.append("line")
+		.style("stroke-width", "3px")
 		.style("stroke", "black")
-		.style("stroke-width", "3px")
-		.attr("x1", .38 * WIDTH)
-		.attr("y1", HEIGHT-(.404*HEIGHT) + 1.5)
-		.attr("x2", .62*WIDTH)
-		.attr("y2", HEIGHT-(.404*HEIGHT) + 1.5); 
+		.attr("x1",arc_start[0])
+		.attr("y1",arc_start[1])
+		.attr("x2",arc_start[0] + (key_width_feet*FEET))
+		.attr("y2",arc_start[1]);
 
-courtSVG.append("line")
+	// draw key marks, hoop
+	draw_key_marks(court, key_width_feet, key_height_feet);
+	draw_hoop(court);
+
+	// Draw charge circle
+	if (charge_circle) {
+		draw_charge_circle(court);
+	}
+
+}
+
+function draw_key_marks(court, key_width, key_height) {
+	
+	// Left block
+	court.append("rect")
+		.style("x", CENTER_COURT - (((key_width/2)*(12*INCHES)) + (8*INCHES)))
+		.style("y",HEIGHT-(8*FEET))
+		.style("width",8*INCHES)
+		.style("height",12*INCHES)
+		.style("stroke", "black");
+
+	// Right block
+	court.append("rect")
+		.style("x", CENTER_COURT + ((key_width/2)*(12*INCHES)))
+		.style("y", HEIGHT-(8*FEET))
+		.style("width",8*INCHES)
+		.style("height",12*INCHES)
+		.style("stroke", "black");
+
+	// Left slashes
+	court.append("rect")
+		.style("x", CENTER_COURT - (((key_width/2)*(12*INCHES)) + (8*INCHES)))
+		.style("y",HEIGHT-(11*FEET))
+		.style("width",8*INCHES)
+		.style("height",2*INCHES)
+		.style("stroke", "black");
+
+	court.append("rect")
+		.style("x", CENTER_COURT - (((key_width/2)*(12*INCHES)) + (8*INCHES)))
+		.style("y",HEIGHT-(14*FEET))
+		.style("width",8*INCHES)
+		.style("height",2*INCHES)
+		.style("stroke", "black");
+
+	court.append("rect")
+		.style("x", CENTER_COURT - (((key_width/2)*(12*INCHES)) + (8*INCHES)))
+		.style("y",HEIGHT-(17*FEET))
+		.style("width",8*INCHES)
+		.style("height",2*INCHES)
+		.style("stroke", "black");
+
+	// Right slashes
+	court.append("rect")
+		.style("x", CENTER_COURT + ((key_width/2)*(12*INCHES)))
+		.style("y", HEIGHT-(11*FEET))
+		.style("width",8*INCHES)
+		.style("height",2*INCHES)
+		.style("stroke", "black");
+
+	court.append("rect")
+		.style("x", CENTER_COURT + ((key_width/2)*(12*INCHES)))
+		.style("y", HEIGHT-(14*FEET))
+		.style("width",8*INCHES)
+		.style("height",2*INCHES)
+		.style("stroke", "black");
+
+	court.append("rect")
+		.style("x", CENTER_COURT + ((key_width/2)*(12*INCHES)))
+		.style("y", HEIGHT-(17*FEET))
+		.style("width",8*INCHES)
+		.style("height",2*INCHES)
+		.style("stroke", "black");
+}
+
+function draw_charge_circle(court) {
+	var path = d3.path();
+	path.moveTo((WIDTH/2)-(4*FEET), HEIGHT-(4*FEET));
+	path.lineTo((WIDTH/2)-(4*FEET), HEIGHT-(4*FEET) - 15*INCHES);
+	path.arc(WIDTH/2, HEIGHT-(63*INCHES), 4*FEET, Math.PI, 0);
+	path.lineTo((WIDTH/2) + (4*FEET), HEIGHT-(4*FEET));
+
+	court.append("path")
+		.attr("d", path)
+		.style("stroke-width", "3px")
 		.style("stroke", "black")
-		.style("stroke-width", "3px")
-		.attr("x1", 40.5*INCHES)
-		.attr("y1", .7901* HEIGHT)
-		.attr("x2", 40.5*INCHES)
-		.attr("y2", HEIGHT); 
+		.style("fill", "none");
+}
 
-courtSVG.append("line")
-		.style("stroke", "black")
-		.style("stroke-width", "3px")
-		.attr("x1", WIDTH-(40.5*INCHES))
-		.attr("y1", .7901* HEIGHT)
-		.attr("x2", WIDTH-(40.5*INCHES))
-		.attr("y2", HEIGHT); 
-
-courtSVG.append("circle")
+function draw_hoop(court) {
+	court.append("circle")
 		.style("stroke", "black")
 		.style("stroke-width", "3px")
 		.style("fill", "none")
@@ -89,7 +151,7 @@ courtSVG.append("circle")
 		.attr("cy", HEIGHT - (63*INCHES))
 		.attr("r", 9*INCHES);
 
-courtSVG.append("line")
+	court.append("line")
 		.style("stroke", "black")
 		.style("stroke-width", "3px")
 		.attr("x1", (CENTER_COURT) - (3*FEET))
@@ -97,136 +159,61 @@ courtSVG.append("line")
 		.attr("x2", (CENTER_COURT) + (3*FEET))
 		.attr("y2", HEIGHT - (48*INCHES)); 
 
-courtSVG.append("rect")
+	court.append("rect")
 		.style("x",CENTER_COURT - (8*INCHES))
 		.style("y", HEIGHT - ((54*INCHES)+2))
 		.style("width", 16*INCHES)
 		.style("height", (6*INCHES)+2);
+}
+
+// calculates the start and end angles for our 3 point arc
+function arc_angles(side_spacing, corner_len) {
+	adj_len = WIDTH/2 - (side_spacing*INCHES);
+	opp_len = (corner_len*INCHES) - (63*INCHES);
+	angle = Math.atan(opp_len/adj_len);
+	start_angle = Math.PI - angle;
+	return [start_angle, angle];
+}
+
+function draw_three_arc(court, side_spacing, corner_len, out_edge) {
+	angles = arc_angles(side_spacing, corner_len);
+	var path = d3.path();
+	path.moveTo(side_spacing*INCHES, HEIGHT);
+	path.arc(WIDTH/2, HEIGHT-(63*INCHES), out_edge*INCHES, -angles[0], -angles[1]);
+	path.lineTo(WIDTH-(side_spacing*INCHES), HEIGHT);
 
 
-// Right block and left block
-courtSVG.append("rect")
-		.style("x", CENTER_COURT - (80*INCHES))
-		.style("y",HEIGHT-(8*FEET))
-		.style("width",8*INCHES)
-		.style("height",12*INCHES);
-
-courtSVG.append("rect")
-		.style("x", CENTER_COURT + (72*INCHES))
-		.style("y", HEIGHT-(8*FEET))
-		.style("width",8*INCHES)
-		.style("height",12*INCHES);
-
-// Key slashes
-courtSVG.append("rect")
-		.style("x", CENTER_COURT - (80*INCHES))
-		.style("y",HEIGHT-(11*FEET))
-		.style("width",8*INCHES)
-		.style("height",2*INCHES);
-
-courtSVG.append("rect")
-		.style("x", CENTER_COURT - (80*INCHES))
-		.style("y",HEIGHT-(14*FEET))
-		.style("width",8*INCHES)
-		.style("height", 2*INCHES);
-
-courtSVG.append("rect")
-		.style("x", CENTER_COURT - (80*INCHES))
-		.style("y",HEIGHT-(17*FEET))
-		.style("width",8*INCHES)
-		.style("height",2*INCHES);
-
-courtSVG.append("rect")
-		.style("x", CENTER_COURT + (72*INCHES))
-		.style("y",HEIGHT-(11*FEET))
-		.style("width",8*INCHES)
-		.style("height",2*INCHES);
-
-courtSVG.append("rect")
-		.style("x", CENTER_COURT + (72*INCHES))
-		.style("y",HEIGHT-(14*FEET))
-		.style("width",8*INCHES)
-		.style("height", 2*INCHES);
-
-courtSVG.append("rect")
-		.style("x", CENTER_COURT + (72*INCHES))
-		.style("y",HEIGHT-(17*FEET))
-		.style("width",8*INCHES)
-		.style("height",2*INCHES);
-
-// Top of key half circle
-// courtSVG.append("circle")
-// 		.style("stroke", "black")
-// 		.style("stroke-width", "3px")
-// 		.style("fill", "none")
-// 		.attr("cx", CENTER_COURT)
-// 		.attr("cy", HEIGHT - (19*FEET))
-// 		.attr("r", 6*FEET);
-
-var key_arc = d3.arc()
-	.innerRadius(6*FEET - CIRCLE_BORDER)
-    .outerRadius(6*FEET)
-    .startAngle(0)
-    .endAngle(Math.PI);
-
-var charge_circle = d3.arc()
-	.innerRadius(4*FEET)
-	.outerRadius(4*FEET + CIRCLE_BORDER)
-	.startAngle(0)
-	.endAngle(Math.PI);
-
-courtSVG.append("path")
-		.attr("d", key_arc)
-		.attr("transform", "translate(" + CENTER_COURT + "," + (HEIGHT-(19*FEET)) + " ) rotate(270)");
-
-courtSVG.append("path")
-		.attr("d", charge_circle)
-		.attr("transform", "translate(" + CENTER_COURT + "," + (HEIGHT-(63*INCHES)) + " ) rotate(270)");
-
-// Charge Lines Etension
-courtSVG.append("line")
+	court.append("path")
+		.attr("d", path)
 		.style("stroke", "black")
 		.style("stroke-width", "3px")
-		.attr("x1", (CENTER_COURT) - ((4*FEET)))
-		.attr("y1", HEIGHT - (63*INCHES))
-		.attr("x2", (CENTER_COURT) - ((4*FEET)))
-		.attr("y2", HEIGHT - (48*INCHES)); 
+		.style("fill", "none");
+}
 
-courtSVG.append("line")
-		.style("stroke", "black")
-		.style("stroke-width", "3px")
-		.attr("x1", (CENTER_COURT) + ((4*FEET)))
-		.attr("y1", HEIGHT - (63*INCHES))
-		.attr("x2", (CENTER_COURT) + ((4*FEET)))
-		.attr("y2", HEIGHT - (48*INCHES));
+// Draw the court.
+function draw_court(court, flag=0, border) {
+	// If border is true, add halfcourt circle
+	if (border) {
+		draw_hc_arc(court, 6);
+		court.style("border", "3px solid black")
+			.style("stroke", "black")
+			.style("stroke-width", "3px");
+	} else {
+		court.style("border-bottom", "3px solid black");
+	}
 
-var three_arc = d3.arc()
-	.innerRadius((265.75*INCHES) - 3)
-	.outerRadius(265.75*INCHES)
-	.startAngle(0)
-	.endAngle(Math.PI) 
+	// Key has same dimensions for all courts
+	draw_key(court, 12, 19);
 
-courtSVG.append("path")
-		.attr("d", three_arc)
-		.attr("transform", "translate(" + CENTER_COURT + "," + (HEIGHT-63*INCHES) + " ) rotate(270)");
+	// Draw three point arc depending on court
+	if (flag==0) {
+		draw_three_arc(court, 40.125, 118.375, 265.75)
+	}
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function draw_mens_ncaa(court, border=true) {
+	draw_court(court, 0, border);
+}
 
 
 

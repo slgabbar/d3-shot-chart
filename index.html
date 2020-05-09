@@ -13,7 +13,8 @@
 
 	<!-- Center shot chart inside the containe -->
 	<div class="container">
-		<div class="shotchart"></div>	
+		<div class="shotchart-border"></div>	
+		<div class="shotchart-no-border"></div>	
 	</div>
 
 
@@ -21,10 +22,24 @@
 	<script src="https://d3js.org/d3.v5.min.js"></script>
 	<script src="d3-shot-chart.js"></script>
 
-	<!-- <script>
-		draw_court(600);
-	</script> -->
+	<script>
+		 // draw the court. currently width set at 600
+		var courtDiv1 = d3.select(".shotchart-border");
+		var courtSVG1 = courtDiv1.append("svg")
+						.attr("width", WIDTH)
+						.attr("height", HEIGHT);
 
+		var courtDiv2 = d3.select(".shotchart-no-border");
+		var courtSVG2 = courtDiv2.append("svg")
+						.attr("width", WIDTH)
+						.attr("height", HEIGHT);
+
+
+		// draw court with and without border
+		draw_mens_ncaa(courtSVG1);
+		draw_mens_ncaa(courtSVG2, false);
+
+	</script>
 
 </body>
 
