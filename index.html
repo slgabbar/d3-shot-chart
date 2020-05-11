@@ -26,19 +26,11 @@
 
 	<script>
 
-		 // draw the court. currently width set at 600
-		var courtDiv = d3.select(".shotchart");
-		var courtSVG = courtDiv.append("svg")
-						.attr("width", WIDTH)
-						.attr("height", HEIGHT);
+		// draw court with specified width
+		draw_mens_ncaa(400);
 
-
-
-		// draw court with aborder
-		draw_mens_ncaa(courtSVG);
-
-		// register shots when clicked.
-		register_shots(courtSVG, WIDTH, HEIGHT);
+		// register shots w3en clicked.
+		// register_shots(courtSVG, WIDTH, HEIGHT);
 	</script>
 
 </body>
