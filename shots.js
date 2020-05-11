@@ -3,19 +3,30 @@
 var shots = [];
 
 function register_shots(court) {
+	var timer = 0;
+	var delay = 200;
+	var prevent = false;
+
 	court
 		.on("click", function() {
-			var mouse = d3.mouse(this)
-			made_shot(court, mouse);
+			var mouse = d3.mouse(this);
+			timer = setTimeout(function() {
+				if (!prevent) {
+					made_shot(court, mouse);
+				}
+				prevent=false;
+			}, delay);
 		})
+
 		.on("dblclick", function() {
 			var mouse = d3.mouse(this);
+			clearTimeout(timer);
+			prevent = true;
 			miss_shot(court, mouse);
 		});
 }
 
 function made_shot(court, pos) {
-	console.log("made_shot");
 	var shot = court.append("circle")
 		.attr("cx", pos[0])
 		.attr("cy", pos[1])
