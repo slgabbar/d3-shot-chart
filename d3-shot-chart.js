@@ -1,15 +1,5 @@
 // d3-shot-chart.js
 
-// college half-court is 50 x 47
-// scale the height based on specified width
-WIDTH = 400
-HEIGHT = .94 * WIDTH
-// FEET = WIDTH/50
-// INCHES = FEET/12
-// CENTER_COURT = WIDTH/2
-
-//******************** Helper functions to build court **********************//
-
 // Draws half circle centeblack at top of chart with specified radius
 function draw_hc_arc(court, dims, r_feet) {
 	radius = r_feet * dims[2]
