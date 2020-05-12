@@ -12,14 +12,15 @@ function draw_hc_arc(court, dims, r_feet) {
 		court.append("path")
 		.attr("d", hc_arc)
 		.attr("transform", "translate(" + dims[4] + ", 0) rotate(90)")
-		.style("stroke", "black");
+		.style("stroke", "black")
+		.style("stroke-width", "3px");
 }
 
 function draw_key(court, dims, key_width_feet, key_height_feet, charge_circle=true) {
-	start_point = [(dims[0]/2) - ((key_width_feet/2)*dims[2]), dims[1]];
-	arc_start = [(dims[0]/2) - ((key_width_feet/2)*dims[2]), (dims[1] - (key_height_feet*dims[2]))];
-	end_point = [(dims[0]/2) + ((key_width_feet/2)*dims[2]), dims[1]];
-	key_arc_center = [dims[0]/2, (dims[1] - (key_height_feet*dims[2]))];
+	start_point = [(dims[4]) - ((key_width_feet/2)*dims[2]), dims[1]];
+	arc_start = [(dims[4]) - ((key_width_feet/2)*dims[2]), (dims[1] - (key_height_feet*dims[2]))];
+	end_point = [(dims[4]) + ((key_width_feet/2)*dims[2]), dims[1]];
+	key_arc_center = [dims[4], (dims[1] - (key_height_feet*dims[2]))];
 	arc_radius = (key_width_feet/2) * dims[2];
 
 	// Draw outline of key
@@ -120,10 +121,10 @@ function draw_key_marks(court, dims, key_width, key_height) {
 
 function draw_charge_circle(court, dims) {
 	var path = d3.path();
-	path.moveTo((dims[0]/2)-(4*dims[2]), dims[1]-(4*dims[2]));
-	path.lineTo((dims[0]/2)-(4*dims[2]), dims[1]-(4*dims[2]) - 15*dims[3]);
-	path.arc(dims[0]/2, dims[1]-(63*dims[3]), 4*dims[2], Math.PI, 0);
-	path.lineTo((dims[0]/2) + (4*dims[2]), dims[1]-(4*dims[2]));
+	path.moveTo((dims[4])-(4*dims[2]), dims[1]-(4*dims[2]));
+	path.lineTo((dims[4])-(4*dims[2]), dims[1]-(4*dims[2]) - 15*dims[3]);
+	path.arc(dims[4], dims[1]-(63*dims[3]), 4*dims[2], Math.PI, 0);
+	path.lineTo((dims[4]) + (4*dims[2]), dims[1]-(4*dims[2]));
 
 	court.append("path")
 		.attr("d", path)
@@ -159,7 +160,7 @@ function draw_hoop(court, dims) {
 
 // calculates the start and end angles for our 3 point arc
 function arc_angles(dims, side_spacing, corner_len) {
-	adj_len = dims[0]/2 - (side_spacing*dims[3]);
+	adj_len = dims[4] - (side_spacing*dims[3]);
 	opp_len = (corner_len*dims[3]) - (63*dims[3]);
 	angle = Math.atan(opp_len/adj_len);
 	start_angle = Math.PI - angle;
@@ -169,9 +170,9 @@ function arc_angles(dims, side_spacing, corner_len) {
 function draw_three_arc(court, dims, side_spacing, corner_len, out_edge) {
 	angles = arc_angles(dims, side_spacing, corner_len);
 	var path = d3.path();
-	path.moveTo(side_spacing*dims[3], dims[1]);
-	path.arc(dims[0]/2, dims[1]-(63*dims[3]), out_edge*dims[3], -angles[0], -angles[1]);
-	path.lineTo(dims[0]-(side_spacing*dims[3]), dims[1]);
+	path.moveTo((side_spacing*dims[3] - (0*dims[3])), dims[1]);
+	path.arc(dims[4], dims[1]-(63*dims[3]), out_edge*dims[3], -angles[0], -angles[1]);
+	path.lineTo(dims[0]-(side_spacing*dims[3]+(0*dims[3])), dims[1]);
 
 
 	court.append("path")
@@ -186,9 +187,7 @@ function draw_court(court, dims, flag=0, border) {
 	// If border is true, add halfcourt circle
 	if (border) {
 		draw_hc_arc(court, dims, 6);
-		court.style("border", "3px solid black")
-			.style("stroke", "black")
-			.style("stroke-width", "3px");
+		court.style("border", "3px solid black");
 	} else {
 		court.style("border-bottom", "3px solid black");
 	}
@@ -207,13 +206,15 @@ function draw_mens_ncaa(court_width_px, border=true) {
 	height_px = .94 * court_width_px;
 	feet_px = court_width_px/50;
 	inch_px = feet_px/12
-	center_court = court_width_px/2
+	center_court = court_width_px/2 - (0*inch_px);
+
 	dims = [court_width_px, height_px, feet_px, inch_px, center_court];
 
 	var courtDiv = d3.select(".shotchart");
 	var courtSVG = courtDiv.append("svg")
 						.attr("width", court_width_px)
-						.attr("height", height_px);
+						.attr("height", height_px)
+						.attr("class", "court-svg");
 
 	draw_court(courtSVG, dims, 0, border);
 }
