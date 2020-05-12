@@ -1,7 +1,8 @@
 // shots.js
 var PLAYER_SELECTED = false;
+var record_table = d3.select(".play-by-play");
 var shots = [];
-var record = d3.select(".container2");
+var plays = [];
 
 function register_shots(court) {
 	var timer = 0;
@@ -32,7 +33,8 @@ function register_shots(court) {
 function made_shot(court, pos) {
 	try {
 		var player = d3.select(".player-card-clicked").select(".name").text();
-		record.append("p").text(player +",made shot");
+		var play = record_table.append("tr").append("th").text(player+", made shot.");
+		plays.push(play);
 		var shot = court.append("circle")
 			.attr("cx", pos[0])
 			.attr("cy", pos[1])
@@ -47,7 +49,8 @@ function made_shot(court, pos) {
 function miss_shot(court, pos) {
 	try {
 		var player = d3.select(".player-card-clicked").select(".name").text();
-		record.append("p").text(player +",missed shot");
+		var play =record_table.append("tr").append("th").text(player+", missed shot.");
+		plays.push(play);
 		var shot = court.append("circle")
 			.attr("cx", pos[0])
 			.attr("cy", pos[1])
@@ -61,12 +64,17 @@ function miss_shot(court, pos) {
 
 function undo_shot() {
 	var last_shot = shots.pop();
+	var last_play = plays.pop();
 	last_shot.remove();
+	last_play.remove();
 }
 
 function clear_shots() {
 	d3.selectAll(".made-shot").remove();
 	d3.selectAll(".miss-shot").remove();
+	d3.selectAll("tr").remove();
+	shots = [];
+	plays = [];
 }
 
 var PLAYER_SELECTED = false;

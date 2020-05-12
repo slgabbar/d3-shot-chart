@@ -1,22 +1,14 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
-	<title>d3-shot-chart</title>
-
+	<title></title>
 	<link rel="stylesheet" type="text/css" href="index.css">
 	<link rel="stylesheet" type="text/css" href="shots.css">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-
-
 </head>
-
 <body>
-	<div class='container'>
 
-		<div class='player-container p-3'>
+	<div class="left-container">
+		<div class="player-buttons">
 			<div class="player-card" onclick="player_clicked(this);">
 				<div>
 					<h5 class="name">Player 1</h5>
@@ -44,29 +36,19 @@
 			</div>
 		</div>
 		<div class="shotchart"></div>
-		<div class="shot-container p-3">
-			<div class="shotchart-controls">
-				<button type="button" class="btn btn-primary" onclick="undo_shot()">Undo</button>
-				<button type="button" class="btn btn-primary" onclick="clear_shots()">Clear</button>
-			</div>
+		<div class="shot-buttons">
+			<button type="button" class="button" onclick="undo_shot()">Undo</button>
+			<button type="button" class="button" onclick="clear_shots()">Clear</button>
 		</div>
-
+	</div>
+	<div class="right-container">
+		<table class="play-by-play">
+		</table>
 	</div>
 
-	<div class="container2">
-<!-- 		<p class="shot-record">player 1 shot 3</p>
-		<p class="shot-record">player 2 shot 4</p>
-		<p class="shot-record">player 3 shot 6</p> -->
-	</div>
-
-	<!-- d3.js -->
 	<script src="https://d3js.org/d3.v5.min.js"></script>
 	<script src="d3-shot-chart.js"></script>
-	<!-- <script src="players.js"></script> -->
 	<script src="shots.js"></script>
-
-	<!-- jquery -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 	<script>
 
@@ -79,5 +61,4 @@
 	</script>
 
 </body>
-
 </html>
