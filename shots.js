@@ -34,14 +34,11 @@ function register_shots(court, width) {
 	}
 
 function made_shot(court, shot, pos) {
-
 	var fg_type;
-	if (shot=="three-arc") {
+	if (shot=="inside-arc") {
 		//inside three point arc
 		fg_type = "2PT FG";
 	} else { fg_type="3PT FG"; }
-
-	console.log(fg_type);
 
 	try {
 
@@ -52,6 +49,9 @@ function made_shot(court, shot, pos) {
 			.style("color", "orange");
 		play.append("th")
 			.text(fg_type)
+			.style("color", "brown");
+		play.append("th")
+			.text(shot)
 			.style("color", "purple");
 		play.append("th")
 			.text("made")
@@ -71,12 +71,10 @@ function made_shot(court, shot, pos) {
 
 function miss_shot(court, shot, pos) {
 	var fg_type;
-	if (shot=="three-arc") {
+	if (shot=="inside-arc") {
 		//inside three point arc
 		fg_type = "2PT FG";
 	} else { fg_type="3PT FG"; }
-
-	console.log(fg_type);
 
 	try {
 
@@ -87,6 +85,9 @@ function miss_shot(court, shot, pos) {
 			.style("color", "orange");
 		play.append("th")
 			.text(fg_type)
+			.style("color", "brown");
+		play.append("th")
+			.text(shot)
 			.style("color", "purple");
 		play.append("th")
 			.text("miss")

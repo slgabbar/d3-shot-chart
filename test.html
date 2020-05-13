@@ -2,12 +2,13 @@
 <html>
 <head>
 	<title></title>
-	<link rel="stylesheet" type="text/css" href="index.css">
+	<link rel="stylesheet" type="text/css" href="test.css">
 	<link rel="stylesheet" type="text/css" href="shots.css">
 </head>
 <body>
 
-	<div class="left-container">
+	<div class="container">
+
 		<div class="player-buttons">
 			<div class="player-card" onclick="player_clicked(this);">
 				<div>
@@ -35,15 +36,18 @@
 				</div>
 			</div>
 		</div>
-		<div class="shotchart"></div>
-		<div class="shot-buttons">
-			<button type="button" class="button" onclick="undo_shot()">Undo</button>
-			<button type="button" class="button" onclick="clear_shots()">Clear</button>
+
+		<div class="chart">
+			<div class="shotchart"></div>
+
+			<div class="shot-buttons">
+				<button type="button" class="button" onclick="undo_shot()">Undo</button>
+				<button type="button" class="button" onclick="clear_shots()">Clear</button>
+			</div>
 		</div>
-	</div>
-	<div class="right-container">
-		<table class="play-by-play">
-		</table>
+
+		<table class="play-by-play"></table>
+
 	</div>
 
 	<script src="https://d3js.org/d3.v5.min.js"></script>

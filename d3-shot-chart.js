@@ -176,12 +176,71 @@ function draw_three_arc(court, dims, side_spacing, corner_len, out_edge) {
 
 	court.append("path")
 		.attr("d", path)
-		.attr("id", "three-arc")
+		.attr("id", "inside-arc")
 		.style("stroke", "black")
 		.style("stroke-width", "3px")
-		.style("fill", "white")
+		.style("fill", "blue")
 		.style("fill-opacity", 0);
 }
+
+function draw_zones(court, dims, side_spacing, corner_len, key_width, out_edge) {
+	width = dims[0];
+	height = dims[1];
+	feet = dims[2];
+	inch = dims[3];
+	center = dims[4];
+
+	// left wing-three
+	court.append("rect")
+		.attr("x", 0)
+		.attr("y", 0)
+		.attr("width", width/2)
+		.attr("height", height)
+		.attr("id", "left-wing")
+		.attr("fill", "green")
+		.attr("fill-opacity", 0);
+
+	// right wing-three
+	court.append("rect")
+		.attr("x", width/2)
+		.attr("y", 0)
+		.attr("width", width/2)
+		.attr("height", height)
+		.attr("id", "right-wing")
+		.attr("fill", "green")
+		.attr("fill-opacity", 0);
+
+	// left corner
+	court.append("rect")
+		.attr("x", 0)
+		.attr("y", height - (corner_len*inch))
+		.attr("width", (side_spacing*inch))
+		.attr("height", height)
+		.attr("id", "left-corner")
+		.style("fill", "red")
+		.style("fill-opacity", 0);
+
+	// right corner
+	court.append("rect")
+		.attr("x", width-(side_spacing*inch))
+		.attr("y", height - (corner_len*inch))
+		.attr("width", (side_spacing*inch))
+		.attr("height", height)
+		.attr("id", "right-corner")
+		.style("fill", "red")
+		.style("fill-opacity", 0);
+
+	// top of key
+	court.append("rect")
+		.attr("x", center - ((key_width/2)*feet))
+		.attr("y", 0)
+		.attr("width", key_width*feet)
+		.attr("height", 800)
+		.attr("id", "top-of-key")
+		.style("fill", "orange")
+		.style("fill-opacity", .0);
+}
+
 
 // Draw the court.
 function draw_court(court, dims, flag=0, border) {
@@ -195,11 +254,13 @@ function draw_court(court, dims, flag=0, border) {
 
 	// Key has same dimensions for all courts
 	draw_key(court, dims, 12, 19);
+	draw_zones(court, dims, 40.125, 118.375, 12, 265.75);
 
 	// Draw three point arc depending on court
 	if (flag==0) {
 		draw_three_arc(court, dims, 40.125, 118.375, 265.75)
 	}
+
 }
 
 function draw_mens_ncaa(court_width_px, border=true) {
