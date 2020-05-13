@@ -174,12 +174,13 @@ function draw_three_arc(court, dims, side_spacing, corner_len, out_edge) {
 	path.arc(dims[4], dims[1]-(63*dims[3]), out_edge*dims[3], -angles[0], -angles[1]);
 	path.lineTo(dims[0]-(side_spacing*dims[3]+(0*dims[3])), dims[1]);
 
-
 	court.append("path")
 		.attr("d", path)
+		.attr("id", "three-arc")
 		.style("stroke", "black")
 		.style("stroke-width", "3px")
-		.style("fill", "none");
+		.style("fill", "white")
+		.style("fill-opacity", 0);
 }
 
 // Draw the court.

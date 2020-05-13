@@ -4,17 +4,19 @@ var record_table = d3.select(".play-by-play");
 var shots = [];
 var plays = [];
 
-function register_shots(court) {
+function register_shots(court, width) {
 	var timer = 0;
 	var delay = 200;
 	var prevent = false;
 
+
 	court
 		.on("click", function() {
 			var mouse = d3.mouse(this);
+			var shot_type = d3.event.target.id;
 			timer = setTimeout(function() {
 				if (!prevent) {
-					made_shot(court, mouse);
+					made_shot(court, shot_type, mouse);
 					unclick_player();
 				}
 				prevent=false;
@@ -23,18 +25,39 @@ function register_shots(court) {
 
 		.on("dblclick", function() {
 			var mouse = d3.mouse(this);
+			var shot_type = d3.event.target.id;
 			clearTimeout(timer);
 			prevent = true;
-			miss_shot(court, mouse);
+			miss_shot(court, shot_type, mouse);
 			unclick_player();
 		});
-}
+	}
 
-function made_shot(court, pos) {
+function made_shot(court, shot, pos) {
+
+	var fg_type;
+	if (shot=="three-arc") {
+		//inside three point arc
+		fg_type = "2PT FG";
+	} else { fg_type="3PT FG"; }
+
+	console.log(fg_type);
+
 	try {
+
 		var player = d3.select(".player-card-clicked").select(".name").text();
-		var play = record_table.append("tr").append("th").text(player+", made shot.");
+		var play = record_table.append("tr")
+		play.append("th")
+			.text(player)
+			.style("color", "orange");
+		play.append("th")
+			.text(fg_type)
+			.style("color", "purple");
+		play.append("th")
+			.text("made")
+			.style("color", "green");
 		plays.push(play);
+
 		var shot = court.append("circle")
 			.attr("cx", pos[0])
 			.attr("cy", pos[1])
@@ -46,11 +69,30 @@ function made_shot(court, pos) {
 	}
 }
 
-function miss_shot(court, pos) {
+function miss_shot(court, shot, pos) {
+	var fg_type;
+	if (shot=="three-arc") {
+		//inside three point arc
+		fg_type = "2PT FG";
+	} else { fg_type="3PT FG"; }
+
+	console.log(fg_type);
+
 	try {
+
 		var player = d3.select(".player-card-clicked").select(".name").text();
-		var play =record_table.append("tr").append("th").text(player+", missed shot.");
+		var play = record_table.append("tr")
+		play.append("th")
+			.text(player)
+			.style("color", "orange");
+		play.append("th")
+			.text(fg_type)
+			.style("color", "purple");
+		play.append("th")
+			.text("miss")
+			.style("color", "red");
 		plays.push(play);
+
 		var shot = court.append("circle")
 			.attr("cx", pos[0])
 			.attr("cy", pos[1])
@@ -76,8 +118,6 @@ function clear_shots() {
 	shots = [];
 	plays = [];
 }
-
-var PLAYER_SELECTED = false;
 
 // when player card is cliced
 function player_clicked(e) {
@@ -106,3 +146,5 @@ function unclick_player() {
 	player.classed("player-card", true);
 	PLAYER_SELECTED = false;
 }
+
+

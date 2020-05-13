@@ -51,12 +51,12 @@
 	<script src="shots.js"></script>
 
 	<script>
-
+		var width = 400;
 		// draw court with specified width
-		draw_mens_ncaa(600);
+		draw_mens_ncaa(width);
 
 		var court = d3.select("svg");
-		register_shots(court);
+		register_shots(court, width);
 
 	</script>
 
